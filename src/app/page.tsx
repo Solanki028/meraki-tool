@@ -7,6 +7,7 @@ import {
   FolderKanban,
 } from "lucide-react";
 
+import { BrandLogo } from "@/components/brand/brand-logo";
 import { ClientForm, ProjectForm, ProjectStatusForm, TaskForm, TaskStatusForm } from "@/components/tracker/forms";
 import { ProjectStatusBadge, TaskStatusBadge } from "@/components/tracker/status-badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,6 +28,50 @@ export const dynamic = "force-dynamic";
 
 const TASK_COLUMNS: TaskStatus[] = ["todo", "in_progress", "done"];
 
+function SidebarBrand() {
+  return (
+    <div className="rounded-2xl border border-zinc-200 bg-white px-4 py-3 shadow-sm">
+      <div className="flex items-center gap-3">
+        <div className="shrink-0">
+          <BrandLogo size={40} tone="muted" className="drop-shadow-[0_1px_2px_rgba(116,45,92,0.16)]" />
+        </div>
+        <div className="min-w-0">
+          <p className="truncate text-[15px] font-semibold leading-5 text-[#4d1c49]">
+            Meraki Innovative Solutions
+          </p>
+          <p className="text-xs text-zinc-500">Focus on what matters today.</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DashboardEntryEmptyState() {
+  return (
+    <div className="mx-auto flex min-h-[70vh] max-w-3xl items-center justify-center px-4">
+      <div className="w-full rounded-[28px] border border-zinc-200 bg-white p-8 text-center shadow-sm md:p-10">
+        <div className="mx-auto flex size-28 items-center justify-center rounded-full bg-[#f2e4ec] ring-1 ring-[#dfc8d7]">
+          <BrandLogo size={72} />
+        </div>
+        <div className="mt-6 space-y-3">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8a5572]">
+            Meraki workspace
+          </p>
+          <h2 className="text-3xl font-semibold tracking-tight text-zinc-950">
+            Welcome to Meraki
+          </h2>
+          <p className="mx-auto max-w-xl text-sm leading-7 text-zinc-600 md:text-base">
+            Your central place to manage clients, projects, and tasks with clarity.
+          </p>
+          <p className="text-sm text-zinc-500">
+            Start by selecting a client or creating a new one.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ClientSidebar({
   clients,
   selectedClientId,
@@ -37,19 +82,9 @@ function ClientSidebar({
   isDemoMode?: boolean;
 }) {
   return (
-    <aside className="border-b border-zinc-200/80 bg-white/95 md:border-r md:border-b-0">
+    <aside className="border-b border-[#eadde7] bg-white/95 md:border-r md:border-b-0">
       <div className="flex h-full flex-col gap-5 p-4 md:sticky md:top-0 md:h-screen md:w-[320px] md:p-6">
-        <div className="space-y-2">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-zinc-500">
-            Client Work Tracker
-          </p>
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-zinc-950">Today&apos;s client work</h1>
-            <p className="mt-1 text-sm text-zinc-600">
-              Focus on what matters today. Your work, organized by client. No noise.
-            </p>
-          </div>
-        </div>
+        <SidebarBrand />
 
         <Card size="sm" className="border-zinc-200 bg-zinc-50 shadow-sm">
           <CardHeader className="pb-0">
@@ -93,7 +128,7 @@ function ClientSidebar({
                     className={cn(
                       "block rounded-2xl border p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5",
                       isSelected
-                        ? "border-zinc-950 bg-zinc-950 text-white"
+                        ? "border-[#d5b7cb] bg-[#f7eff4] text-zinc-950 shadow-[0_10px_24px_rgba(116,45,92,0.09)]"
                         : "border-zinc-200 bg-white text-zinc-900 hover:border-zinc-300 hover:bg-zinc-50 hover:shadow-md",
                     )}
                   >
@@ -103,7 +138,7 @@ function ClientSidebar({
                         <p
                           className={cn(
                             "mt-1 text-xs",
-                            isSelected ? "text-zinc-300" : "text-zinc-500",
+                            isSelected ? "text-[#87526f]" : "text-zinc-500",
                           )}
                         >
                           {counts.projects} projects
@@ -112,7 +147,7 @@ function ClientSidebar({
                       <span
                         className={cn(
                           "rounded-full px-2 py-0.5 text-xs font-medium",
-                          isSelected ? "bg-white/12 text-white" : "bg-zinc-100 text-zinc-700",
+                          isSelected ? "bg-[#ead6e2] text-[#5f2557]" : "bg-zinc-100 text-zinc-700",
                         )}
                       >
                         {counts.openTasks} open
@@ -196,7 +231,7 @@ function FocusTaskCard({ task }: { task: FocusTask }) {
           <p className="text-lg font-semibold tracking-tight text-zinc-950">{task.title}</p>
           <p className="text-sm text-zinc-500">
             {task.projectName}
-            {task.due_date ? ` • ${formatDueDateLabel(task.due_date)}` : ""}
+            {task.due_date ? ` - ${formatDueDateLabel(task.due_date)}` : ""}
           </p>
         </div>
         <TaskStatusBadge status={task.status} />
@@ -383,14 +418,7 @@ export default async function Home({ searchParams }: PageProps) {
           ) : null}
 
           {!selectedClient ? (
-            <Card className="mx-auto mt-12 max-w-2xl bg-white">
-              <CardHeader>
-                <CardTitle>No client selected</CardTitle>
-                <CardDescription>
-                  Add your first client from the sidebar to start tracking projects and tasks.
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            <DashboardEntryEmptyState />
           ) : (
             <div className="mx-auto flex max-w-7xl flex-col gap-6">
               <FocusPanel client={selectedClient} focusTasks={focusTasks} />
