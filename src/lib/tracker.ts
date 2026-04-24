@@ -13,6 +13,8 @@ import type {
   TaskStatus,
 } from "@/lib/types";
 
+export type FocusTaskTone = "overdue" | "today" | "active" | "upcoming";
+
 const TASK_STATUS_LABELS: Record<TaskStatus, string> = {
   todo: "Todo",
   in_progress: "In progress",
@@ -96,7 +98,7 @@ function sortProjects(projects: ProjectWithTasks[]) {
 
 function getTaskUrgency(task: Task) {
   if (!task.due_date) {
-    return 3;
+    return task.status === "in_progress" ? 2 : 3;
   }
 
   const dueDate = parseISO(task.due_date);
@@ -111,6 +113,44 @@ function getTaskUrgency(task: Task) {
   }
 
   return dueDate.getTime() >= today.getTime() ? 2 : 3;
+}
+
+export function getFocusTaskTone(task: Task): FocusTaskTone {
+  if (task.due_date) {
+    const dueDate = parseISO(task.due_date);
+
+    if (isPast(dueDate) && !isToday(dueDate)) {
+      return "overdue";
+    }
+
+    if (isToday(dueDate)) {
+      return "today";
+    }
+  }
+
+  if (task.status === "in_progress") {
+    return "active";
+  }
+
+  return "upcoming";
+}
+
+export function getFocusTaskLabel(task: Task) {
+  const tone = getFocusTaskTone(task);
+
+  if (tone === "overdue") {
+    return "Overdue";
+  }
+
+  if (tone === "today") {
+    return "Due today";
+  }
+
+  if (tone === "active") {
+    return "Active now";
+  }
+
+  return "Up next";
 }
 
 function assertNoError(error: { message: string } | null, label: string) {
@@ -327,7 +367,13 @@ export function getFocusTasks(client: ClientWithProjects | null) {
         return statusDiff;
       }
 
-      return compareDatesAscending(left.due_date, right.due_date);
+      const dueDiff = compareDatesAscending(left.due_date, right.due_date);
+
+      if (dueDiff !== 0) {
+        return dueDiff;
+      }
+
+      return parseISO(right.created_at).getTime() - parseISO(left.created_at).getTime();
     })
     .slice(0, 6);
 }

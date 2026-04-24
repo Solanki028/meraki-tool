@@ -61,7 +61,7 @@ export function ProjectForm({ clientId, disabled = false }: { clientId: string; 
   return (
     <form
       action={createProjectAction}
-      className="grid gap-2 rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-3 md:grid-cols-[minmax(0,1fr)_auto]"
+      className="grid gap-3 rounded-2xl border border-dashed border-zinc-300 bg-zinc-50 p-4 md:grid-cols-[minmax(0,1fr)_auto]"
     >
       <input type="hidden" name="clientId" value={clientId} />
       <Input
@@ -72,7 +72,7 @@ export function ProjectForm({ clientId, disabled = false }: { clientId: string; 
         disabled={disabled}
         required
       />
-      <SubmitButton pendingLabel="Adding project..." className="w-full md:w-auto" disabled={disabled}>
+      <SubmitButton pendingLabel="Adding project..." className="w-full md:w-auto shadow-sm" disabled={disabled}>
         Add project
       </SubmitButton>
     </form>
@@ -108,7 +108,7 @@ export function ProjectStatusForm({
 
 export function TaskForm({ projectId, disabled = false }: { projectId: string; disabled?: boolean }) {
   return (
-    <form action={createTaskAction} className="grid gap-3 rounded-xl border border-zinc-200 bg-white p-3">
+    <form action={createTaskAction} className="grid gap-4 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm">
       <input type="hidden" name="projectId" value={projectId} />
       <div className="grid gap-3 xl:grid-cols-[minmax(0,1.4fr)_200px]">
         <Input name="title" placeholder="Task title" aria-label="Task title" disabled={disabled} required />
@@ -121,8 +121,11 @@ export function TaskForm({ projectId, disabled = false }: { projectId: string; d
         className="min-h-20 resize-none"
         disabled={disabled}
       />
-      <div className="flex justify-end">
-        <SubmitButton pendingLabel="Adding task..." disabled={disabled}>Add task</SubmitButton>
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm text-zinc-500">Add the next action in one step.</p>
+        <SubmitButton pendingLabel="Adding task..." className="shadow-sm" disabled={disabled}>
+          Add task
+        </SubmitButton>
       </div>
     </form>
   );
@@ -149,8 +152,10 @@ function TaskStatusButton({
       value={value}
       disabled={pending || disabled}
       className={cn(
-        "rounded-md px-2 py-1 text-xs font-medium transition-colors",
-        isActive ? "bg-zinc-900 text-white" : "text-zinc-600 hover:bg-white hover:text-zinc-950",
+        "rounded-md px-2 py-1 text-xs font-medium transition-all duration-200",
+        isActive
+          ? "bg-zinc-900 text-white shadow-sm"
+          : "text-zinc-600 hover:bg-white hover:text-zinc-950 hover:shadow-sm active:scale-[0.98]",
         disabled && "cursor-not-allowed opacity-60",
       )}
     >

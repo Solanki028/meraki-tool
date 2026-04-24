@@ -2,9 +2,11 @@
 
 ## 1. What I Built
 
+This tool is intentionally minimal. Instead of recreating a full project management system, it focuses on one thing: helping a small team quickly understand what needs attention today.
+
 I built a focused internal tracker for small teams who need one place to see client work without juggling WhatsApp threads, spreadsheet tabs, and memory.
 
-The product stays centered on a single daily question: what needs attention today, and for which client? Clients live in the sidebar, projects stay grouped under the selected client, and tasks are easy to add and move between `todo`, `in_progress`, and `done`.
+The product stays centered on a single daily question: what needs attention today, and for which client? Clients live in the sidebar, projects stay grouped under the selected client, and the "Focus for today" area makes the next task obvious before users scan the rest of the workspace.
 
 ## 2. Key Decisions
 
@@ -24,8 +26,8 @@ The product stays centered on a single daily question: what needs attention toda
 - Add optional due dates and short notes to tasks.
 - Move tasks between `todo`, `in_progress`, and `done`.
 - See project tasks grouped by status.
-- See a lightweight “Focus for today” view for the selected client.
-- Setup-safe empty state when Supabase environment variables are not configured yet.
+- See a prioritized "Focus for today" view for the selected client.
+- Setup-safe demo mode when Supabase environment variables are not configured yet.
 
 ## 4. What I’d Build Next
 
@@ -62,6 +64,12 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
 ```bash
 npm run dev
+```
+
+5. Optional: seed demo records into your live Supabase project:
+
+```bash
+npm run seed
 ```
 
 ## Deploying to Vercel
