@@ -4,8 +4,19 @@ import { AppShellTransition } from "@/components/app/app-shell-transition";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Client Work Tracker by Meraki",
+  title: "Meraki Workspace - Client Work Tracker",
   description: "A focused internal tracker for client work, projects, and daily tasks.",
+  openGraph: {
+    title: "Meraki Workspace",
+    description: "A focused internal tracker for client work, projects, and daily tasks.",
+    siteName: "Meraki Workspace",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Meraki Workspace",
+    description: "A focused internal tracker for client work, projects, and daily tasks.",
+  },
 };
 
 export default function RootLayout({
