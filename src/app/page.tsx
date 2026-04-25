@@ -5,7 +5,10 @@ import {
   BriefcaseBusiness,
   CircleCheckBig,
   FolderKanban,
+  Menu,
 } from "lucide-react";
+
+import { MobileNav } from "@/components/tracker/mobile-nav";
 
 import { BrandLogo } from "@/components/brand/brand-logo";
 import { ClientForm, ProjectForm, ProjectStatusForm, TaskForm, TaskStatusForm } from "@/components/tracker/forms";
@@ -67,7 +70,7 @@ function DashboardEntryEmptyState() {
   );
 }
 
-function ClientSidebar({
+function SidebarContent({
   clients,
   selectedClientId,
   isDemoMode = false,
@@ -77,72 +80,70 @@ function ClientSidebar({
   isDemoMode?: boolean;
 }) {
   return (
-    <aside className="border-r border-zinc-200 bg-zinc-50/80 flex flex-col h-screen overflow-hidden md:w-[260px] lg:w-[280px]">
-      <div className="flex flex-col gap-4 p-4 h-full">
-        <SidebarBrand />
+    <div className="flex flex-col gap-4 p-4 h-full">
+      <SidebarBrand />
 
-        <Card size="sm" className="border-zinc-200 bg-white shadow-none">
-          <CardHeader className="pb-0">
-            <CardTitle>Clients</CardTitle>
-          </CardHeader>
-          <CardContent className="pt-2">
-            {isDemoMode ? (
-              <div className="rounded-md border border-dashed border-zinc-300 bg-zinc-50 p-2 text-xs text-zinc-500">
-                Disabled in demo.
-              </div>
-            ) : (
-              <ClientForm />
-            )}
-          </CardContent>
-        </Card>
+      <Card size="sm" className="border-zinc-200 bg-white shadow-none">
+        <CardHeader className="pb-0">
+          <CardTitle>Clients</CardTitle>
+        </CardHeader>
+        <CardContent className="pt-2">
+          {isDemoMode ? (
+            <div className="rounded-md border border-dashed border-zinc-300 bg-zinc-50 p-2 text-xs text-zinc-500">
+              Disabled in demo.
+            </div>
+          ) : (
+            <ClientForm />
+          )}
+        </CardContent>
+      </Card>
 
-        <div className="flex min-h-0 flex-1 flex-col">
-          <div className="mb-2 flex items-center justify-between px-1">
-            <h2 className="text-[11px] font-bold uppercase text-zinc-500 tracking-wider">Directory</h2>
-            <span className="text-[10px] text-zinc-400">{clients.length}</span>
-          </div>
-          <div className="space-y-0.5 overflow-y-auto pr-1 pb-4">
-            {clients.length === 0 ? (
-              <div className="rounded-md border border-dashed border-zinc-300 bg-white p-3 text-xs text-zinc-500">
-                No clients yet.
-              </div>
-            ) : (
-              clients.map((client) => {
-                const counts = getClientTaskCounts(client);
-                const isSelected = client.id === selectedClientId;
+      <div className="flex min-h-0 flex-1 flex-col">
+        <div className="mb-2 flex items-center justify-between px-1">
+          <h2 className="text-[11px] font-bold uppercase text-zinc-500 tracking-wider">Directory</h2>
+          <span className="text-[10px] text-zinc-400">{clients.length}</span>
+        </div>
+        <div className="space-y-0.5 overflow-y-auto pr-1 pb-4">
+          {clients.length === 0 ? (
+            <div className="rounded-md border border-dashed border-zinc-300 bg-white p-3 text-xs text-zinc-500">
+              No clients yet.
+            </div>
+          ) : (
+            clients.map((client) => {
+              const counts = getClientTaskCounts(client);
+              const isSelected = client.id === selectedClientId;
 
-                return (
-                  <Link
-                    key={client.id}
-                    href={`/?client=${client.id}`}
-                    className={cn(
-                      "block rounded-md px-3 py-2 transition-colors",
-                      isSelected
-                        ? "bg-[#f2e4ec] text-zinc-950"
-                        : "text-zinc-700 hover:bg-zinc-200/50",
-                    )}
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-medium">{client.name}</p>
-                      </div>
-                      <span
-                        className={cn(
-                          "shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium",
-                          isSelected ? "bg-[#e5c9da] text-[#5f2557]" : "bg-zinc-200 text-zinc-600",
-                        )}
-                      >
-                        {counts.openTasks}
-                      </span>
+              return (
+                <Link
+                  key={client.id}
+                  href={`/?client=${client.id}`}
+                  className={cn(
+                    "block rounded-md px-3 py-2 transition-colors",
+                    isSelected
+                      ? "bg-[#f2e4ec] text-zinc-950"
+                      : "text-zinc-700 hover:bg-zinc-200/50",
+                  )}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium">{client.name}</p>
                     </div>
-                  </Link>
-                );
-              })
-            )}
-          </div>
+                    <span
+                      className={cn(
+                        "shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium",
+                        isSelected ? "bg-[#e5c9da] text-[#5f2557]" : "bg-zinc-200 text-zinc-600",
+                      )}
+                    >
+                      {counts.openTasks}
+                    </span>
+                  </div>
+                </Link>
+              );
+            })
+          )}
         </div>
       </div>
-    </aside>
+    </div>
   );
 }
 
@@ -382,8 +383,22 @@ export default async function Home({ searchParams }: PageProps) {
     await getTrackerSnapshot(selectedClientId);
 
   return (
-    <main className="flex h-screen w-full overflow-hidden bg-zinc-100 text-zinc-950 font-sans">
-      <ClientSidebar clients={clients} selectedClientId={selectedClient?.id} isDemoMode={isDemoMode} />
+    <main className="flex h-screen w-full flex-col overflow-hidden bg-zinc-100 text-zinc-950 font-sans md:flex-row">
+      <MobileNav>
+        <SidebarContent
+          clients={clients}
+          selectedClientId={selectedClient?.id}
+          isDemoMode={isDemoMode}
+        />
+      </MobileNav>
+
+      <aside className="hidden border-r border-zinc-200 bg-zinc-50/80 flex-col h-screen overflow-hidden md:flex md:w-[260px] lg:w-[280px]">
+        <SidebarContent
+          clients={clients}
+          selectedClientId={selectedClient?.id}
+          isDemoMode={isDemoMode}
+        />
+      </aside>
 
       <section className="flex-1 overflow-y-auto bg-white border-l border-zinc-200">
         <div className="p-6 md:p-8 lg:p-10 max-w-6xl mx-auto">
